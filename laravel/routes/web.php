@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Lists;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [Lists::class, 'index']);
+
+Route::post('/ajaxtask',[Lists::class, 'add']);
+
+Route::get('getdata',[Lists::class,'get_data']);
+
+Route::post('updatedata',[Lists::class,'updatedata']);
+
+Route::post('deletedata',[Lists::class,'deletedata']);
+
