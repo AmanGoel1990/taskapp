@@ -8,7 +8,8 @@
     <div class="form-group text-center">
         <input type="text" name="description">
         <input type="submit" class="btn btn-primary" value="Add Task">
-        <!-- <button type="submit" class="btn btn-primary">Add Task</button> -->
+        <!-- <input type="submit" class="btn btn-primary" id="show_task" value="Show all task"> -->
+        <button type="button" id="show_task" class="btn btn-primary">Show all task</button>
     </div>
     <div class="form-group">
         <table class="table table-bordered">
@@ -47,6 +48,28 @@
             });
         });
 
+        $(document).on('click','#show_task',function(event)
+        {
+            $.ajaxSetup({
+                beforeSend: function(xhr, type) {
+                    if (!type.crossDomain) {
+                        xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+                    }
+                },
+            });
+            event.preventDefault();
+            $.ajax({
+                    url:'showalldata',
+                    type:'post',
+                    
+                    
+                    success:function(response)
+                    {
+                        fetchallrecord();
+                    }
+            })
+        });
+
         $(document).on('click','.btn-success',function(event){
             $.ajaxSetup({
                 beforeSend: function(xhr, type) {
@@ -57,7 +80,6 @@
             });
             event.preventDefault();
             var id=$(this).val();
-            console.log(id);
             $.ajax({
                     url:'updatedata',
                     type:'post',
@@ -67,7 +89,6 @@
                     
                     success:function(response)
                     {
-                        console.log(response);
                         fetchrecord();
                     }
             })
@@ -93,12 +114,39 @@
                     },
                     success:function(response)
                     {
-                        // console.log(response);
                         fetchrecord();
                     }
                 })
             }
         });
+        fetchallrecord();
+        function fetchallrecord() {
+            
+
+            $.ajax({
+                url:'getalldata',
+                type:'GET',
+                success:function(response)
+                {
+                    var tr = '';
+                    for(var i=0;i<response.length;i++) 
+                    {
+                        var id=response[i].id;
+                        var description = response[i].description;
+                        var status = response[i].status;
+                        tr +='<tr>';
+                        tr += '<td>'+id+'</td>';
+                        tr += '<td>'+description+'</td>';
+                        tr += '<td>'+status+'</td>';
+                        tr +='<td><button type="button" value="'+id+'" class="btn btn-success"><i class="fa fa-edit"></i></button></td>';
+                        tr +='<td><button type="button" value="'+id+'" class="btn btn-danger"><i class="fa fa-close"></i></button></td>';
+                        tr +='</tr>';
+                        
+                    }
+                $('#task_data').html(tr);
+                }
+            });
+        }
         fetchrecord();
         function fetchrecord() {
             

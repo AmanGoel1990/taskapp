@@ -20,6 +20,10 @@ Route::post('/ajaxtask',[Lists::class, 'add']);
 
 Route::get('getdata',[Lists::class,'get_data']);
 
+Route::post('showalldata',[Lists::class,'showalldata']);
+
+Route::get('getalldata',[Lists::class,'getalldata']);
+
 Route::post('updatedata',[Lists::class,'updatedata']);
 
 Route::post('deletedata',[Lists::class,'deletedata']);
